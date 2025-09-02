@@ -1,3 +1,5 @@
+# This has been grabbed from the original source [here](https://github.com/doananhtingithub40102/mern-app) and we will be working off of this
+
 # Basic MERN App
 
 ![my picture](https://doananhtingithub40102.github.io/MyData/mern/mypicture.png)
