@@ -1,5 +1,5 @@
 version: "3.9"
-
+# TODO: Wait for the Dockerfile to have been properly made
 name: mern-app-stack
 
 services:
@@ -67,24 +67,6 @@ services:
       - "3000"
     depends_on:
       - api
-    networks:
-      - app-net
-
-  # =============== Nginx (HTTPS proxy) ===============
-  nginx:
-    image: nginx:1.27-alpine
-    container_name: nginx
-    restart: unless-stopped
-    depends_on:
-      - client
-      - api
-      - mongo-express
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./certs:/etc/nginx/certs:ro
     networks:
       - app-net
 
