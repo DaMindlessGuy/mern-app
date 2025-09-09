@@ -1,4 +1,4 @@
-version: "3.9"
+#version: "3.9"
 # TODO: Wait for the Dockerfile to have been properly made
 name: mern-app-stack
 
@@ -60,7 +60,7 @@ services:
       context: ./client
       dockerfile: Dockerfile
       args:
-        REACT_APP_YOUR_HOSTNAME=${REACT_APP_YOUR_HOSTNAME}
+        - REACT_APP_YOUR_HOSTNAME=${REACT_APP_YOUR_HOSTNAME}
     container_name: client
     restart: unless-stopped
     expose:
@@ -70,8 +70,24 @@ services:
     networks:
       - app-net
 
+  # Nginx
+  reverse-proxy:
+    container_name: reverse-proxy
+    image: nginx:1.19.1-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/nginx.conf:ro
+      - ./nginx/ssl/localhost.crt:/etc/ssl/certs/localhost.crt
+      - ./nginx/ssl/localhost.key:/etc/ssl/private/localhost.key
+    networks:
+      - frontend
+
+
 networks:
   app-net:
+  frontend:
 
 volumes:
   mongo-data:
