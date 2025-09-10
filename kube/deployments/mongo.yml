@@ -20,7 +20,7 @@ spec:
           image: mongo
           envFrom:
             - configMapRef:
-                name: example-env
+                name: env
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
               # Mirror docker-compose.yml

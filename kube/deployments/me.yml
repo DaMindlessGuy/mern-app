@@ -20,7 +20,7 @@ spec:
           image: mongo-express
           envFrom:
             - configMapRef:
-                name: example-env
+                name: env
           env:
               # All vars that may be parsed as non-strings must be quoted
             - name: ME_CONFIG_MONGODB_ENABLE_ADMIN
@@ -30,7 +30,7 @@ spec:
             - name: ME_CONFIG_MONGODB_ADMINPASSWORD
               valueFrom:
                 configMapKeyRef:
-                  name: example-env
+                  name: env
                   key: MONGO_INITDB_ROOT_PASSWORD
             - name: ME_CONFIG_MONGODB_URL
               # Manual because JISAJCDUoiHJHFDLKJSD:LKFJSDHF&TDS*&VGUSID
@@ -40,12 +40,12 @@ spec:
             - name: ME_CONFIG_BASICAUTH_USERNAME
               valueFrom:
                 configMapKeyRef:
-                  name: example-env
+                  name: env
                   key: ME_USERNAME
             - name: ME_CONFIG_BASICAUTH_PASSWORD
               valueFrom:
                 configMapKeyRef:
-                  name: example-env
+                  name: env
                   key: ME_PASSWORD
             - name: PORT
               value: "8081"
