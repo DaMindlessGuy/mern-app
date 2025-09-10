@@ -1,5 +1,4 @@
 #version: "3.9"
-# TODO: Wait for the Dockerfile to have been properly made
 name: mern-app-stack
 
 services:
