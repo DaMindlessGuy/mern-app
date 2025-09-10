@@ -22,5 +22,6 @@ RUN npm install -g serve
 # Step 8: Expose port 3000 (default port for React app)
 EXPOSE 3000
 
-# Step 9: Start the server to serve the React app
+# Step 9: Start the server to serve the React app. Hardcoded copy of /.env because lazy
+ENV REACT_APP_YOUR_HOSTNAME="http://localhost:5000" 
 CMD ["serve", "-s", "build", "-l", "3000"]

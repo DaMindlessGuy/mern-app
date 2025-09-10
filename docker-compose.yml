@@ -60,8 +60,6 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-      args:
-        - REACT_APP_YOUR_HOSTNAME=${REACT_APP_YOUR_HOSTNAME}
     container_name: client
     restart: unless-stopped
     ports:
