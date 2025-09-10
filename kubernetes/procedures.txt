@@ -1,0 +1,11 @@
+To bring up:
+1. `minikube start [--memory <mb>]` (requires superuser)
+
+Status for running cluster:
+* `minikube status`
+* `kubectl get pods -A`
+* `kubectl cluster-info`
+
+Configure Docker operations to be within cluster:
+You can check `docker images`, which will differ when running in/outside of the cluster.
+1. `eval $(minikube docker-env)`
