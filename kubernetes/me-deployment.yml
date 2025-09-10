@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: me-deployment
+  labels:
+    app: me
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: me
+  # Define the pod here:
+  template:
+    metadata:
+      labels:
+        app: me
+    spec:
+      containers:
+        - name: mongo-express
+          image: mongo-express
+          envFrom:
+            - configMapRef:
+                name: example-env
+          env:
+              # All vars that may be parsed as non-strings must be quoted
+            - name: ME_CONFIG_MONGODB_ENABLE_ADMIN
+              value: "true"
+            - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+              value: root
+            - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: example-env
+                  key: MONGO_INITDB_ROOT_PASSWORD
+            - name: ME_CONFIG_MONGODB_URL
+              # Manual because JISAJCDUoiHJHFDLKJSD:LKFJSDHF&TDS*&VGUSID
+              value: "mongodb://root:root@mongo:27017/?authSource=admin"
+            - name: ME_CONFIG_BASICAUTH
+              value: "true"
+            - name: ME_CONFIG_BASICAUTH_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: example-env
+                  key: ME_USERNAME
+            - name: ME_CONFIG_BASICAUTH_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: example-env
+                  key: ME_PASSWORD
+            - name: PORT
+              value: "8081"
+          ports:
+            - containerPort: 8081
+
