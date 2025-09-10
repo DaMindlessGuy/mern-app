@@ -10,6 +10,16 @@
 7. Go to the terminal and type in `cat ~/.ssh/id_rsa.pub` and copy the output of that into `Key` then click on `Add SSH Key`
 8. Now you can go back to your terminal and clone the source code to be able to work on it by using `git clone git@github.com:DaMindlessGuy/mern-app.git && cd mern-app`
 9. After making your contributions type in `git add .` `git commit -m Type in your message here` `git push`
+
+# Requirements
+* Nginx
+* Docker/Docker Compose
+  * This will handle the DB/web server so no servers for those are explicitly needed on the host system
+* Minikube or other suitable Kubernetes runtime
+  * This includes the `kubectl` utility
+
+<hr>
+
 # Basic MERN App
 
 ![my picture](https://doananhtingithub40102.github.io/MyData/mern/mypicture.png)
