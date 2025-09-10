@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-deployment
+  labels:
+    app: mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  # Define the pod here:
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+        - name: mongo
+          image: mongo
+          envFrom:
+            - configMapRef:
+                name: example-env
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              # Mirror docker-compose.yml
+              value: root
+          ports:
+            - containerPort: 27017
+
