@@ -16,9 +16,10 @@ COPY . .
 # Step 6: Expose the API port (5000)
 EXPOSE 5000
 
-# Step 7: Set environment variables
-ENV NODE_ENV=production
+# Step 7: Set environment variables. TODO is to make this automatic here and for the client
 ENV PORT=5000
+ENV NODE_ENV=production
+ENV ATLAS_URI="mongodb://root:password@mongo:27017/database?authSource=admin"
 
 # Step 8: Start the API server
 CMD ["npm", "start"]
