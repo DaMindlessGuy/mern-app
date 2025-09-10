@@ -8,7 +8,7 @@
 5. Under `Access` click on `SSH and GPG keys`
 6. Click on `New SSH key` and give an appropriate name, such as `my AWS EC2 SSH key`
 7. Go to the terminal and type in `cat ~/.ssh/id_rsa.pub` and copy the output of that into `Key` then click on `Add SSH Key`
-8. Now you can go back to your terminal and clone the source code to be able to work on it by using `git clone git@github.com:DaMindlessGuy/mern-app.git && cd mern-app`
+8. Now you can go back to your terminal and clone the source code to be able to work on it by using `git clone $REPO_LOCATIONS && cd mern-app`
 9. After making your contributions type in `git add .` `git commit -m Type in your message here` `git push`
 # Basic MERN App
 

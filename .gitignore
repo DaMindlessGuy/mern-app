@@ -1,2 +1,2 @@
-node_modules
+# .env is here so git doesn't automatically upload .env files but an example .env file is included
 .env
