@@ -98,6 +98,10 @@ sudo docker compose up [-d]
 The Docker Compose project provides 2 `mern-app-stack-*` images, which are local and thus must be built with `docker compose build` (see [§ Bringing up (Docker Compose)](#Non-scaled%20(Docker%20Compose)). **As such, you must re-`build` the Compose project** (without actually needing/having to use/run it) ***every time*** you want to relaunch the cluster—_specifically for the cases where you changed the underlying application_.<br>
 If you just changed the service(s)/deployment(s), then it doesn't really matter.
 
+> [!WARNING]
+> When running the _Docker Compose_ project, you're running `sudo docker compose build` (sketchy) because Nginx Docker'd doesn't play nice with non-superusers sometimes/often. Kube fetches images as a non-root user, therefore if you want your compiled image to be visible to it, you must build it as non-root: `docker commpose build`.<br>
+> This is fine because the Kube implementation _doesn't use_ the Nginx/`reverse-proxy` image.
+
 ```sh
 # Go into /kube/: These will both override old ones, so no need to remove :)
 kubectl apply -f services/ # Need to set up services first for DNS to resolve when deployments launch
