@@ -3,10 +3,43 @@ _Scaling horizontally babay!!!_
 
 This adapts the Docker Compose project (as defined at `/docker-compose.yml`) to be run as a horizontally-scalable application with Kubernetes.
 
-<!-- TODO: Relevant: -->
+## Architecture
 > [!NOTE] Differences from the Compose equivalent
 > All components of the Docker Compose project run at the same level, in a single Docker subnet. For this one, given Nginx scaling is practically of an incompatible architecture to Kube—we won't prioritise Nginx proxying immediately.
 > Regardless, Kube services can get a decent bit done on their own.
+
+The basic transformation from Docker Compose → Kube converts the "Docker Services" to Kubernetes deployments. We have the following deployments:
+* **`api`:** DB API accessed by `client` (the web app) to interface with `mongo` which in turn uses the DB. This is the world-facing DB API, where `mongo` is hidden inside the cluster and is inaccessible to outsiders
+* **`client`:** This serves the web page and processes form inputs to facilidate CRUD operations, it uses the `api` endpoint to interface with the database over the internet (for example)
+* **`me` (Mongo Express):** Administration web UI for the internal MongoDB server. This is also world-facing, facilitating admin users to manage the database from the outside
+* **`mongo`:** Runs the DB and is exposed to the cluster as an accessible service, but its ports are never forwarded to the world
+
+Each of the above has a Kubernetes _Service_ which opens specific ports from within pods to the "default cluster subnet," assigning a local domain based on the service ID. e.g. `services/mongo.yml` lists `.metadata.name` as `"mongo-service"` (and specific ports to open), where therefore other deployments can access `http://mongo-service/` and it will resolve to a node IP of the pod(s) running the `mongo-deployment` container(s).
+
+`api`, `client`, and `me` are all exposed (and later port forwarded if you wish to not set up a reverse proxy layer) to the internet by forwarding their ports using `kubectl port-forward` ([see below](#Scaled%20(K8s))). `mongo`'s service exposes the pod port 27017 to the cluster subnet port 27017, so that other deployments can request `http://mongo-service/`—but the cluster port 27017 is **not** exposed to the local machine (and is thus inaccessible).
+
+## Requirements
+To run this, you'll need these packages: (or their equivalents on other distros)
+* `docker` (`containerd` and `runc` as dependencies if not automatically added)
+* `minikube`, and either:
+	* `alias kubectl="minikube kubectl --"` for every terminal you use to work on this
+	* `kubectl` package itself
+* `docker-compose`
+	* (Optional:) `docker-buildx` for faster/more reliable building
+
+Additionally, if you want to manage Docker stuff as non-root, add yourself to the `docker` group if not already:
+```sh
+if [ $(groups | grep -P '( |^)docker( |$)' | wc -l) = 0 ]; then
+	if [ $(cat /etc/group | grep '^docker:.*:.*:.*$' | wc -l) = 0]; then
+		echo ADDING docker GROUP
+		echo IF YOU WANT TO REMOVE IT LATER, RUN: sudo groupdel docker
+		sudo groupadd docker
+	fi
+
+	sudo usermod -aG docker $USER
+fi
+```
+Then you'll need to re-login or launch a fresh terminal specifically with `newgrp docker` to be able to user Docker normally.
 
 ## Bringing up and down
 ### Before first run (K8s-speficic)
