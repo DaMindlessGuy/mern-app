@@ -55,8 +55,11 @@ If you just changed the service(s)/deployment(s), then it doesn't really matter.
 
 ```
 # Go into /kube/: These will both override old ones, so no need to remove :)
-kubectl apply -f deployments/
 kubectl apply -f services/
+kubectl apply -f deployments/
+
+# Pick from any of the following to open the domain `<foo>-service` to your local machine instead of cluster-internal-only:
+kubectl port-forward svc/mongo-service 27017:27017 --address 0.0.0.0 >/dev/null 2>&1 & disown
 ```
 
 ### Bringing down
