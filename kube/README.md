@@ -32,12 +32,23 @@ kubectl create configmap env --from-env-file=../.env # This will automatically s
 kubectl get pods [-A]
 kubectl describe pod <id>
 kubectl logs <pod>
+# Or logs by deployment name:
+kubectl logs $(kubectl get pods | grep "<app>-deployment" | awk '{print $1}')
 kubectl get deployments
 kubectl get services # Shows internal/cluster subnet ports too!
+# Open terminal by deployment:
+kubectl exec --stdin --tty $(kubectl get pods | grep "<app>-deployment" | awk '{print $1}') -- /bin/sh
 
 docker logs <image>
 docker images
 docker container ls [| grep -v "k8s"]
+
+# Pick from any of the following to open the domain `<foo>-service` to your local machine instead of cluster-internal-only:
+# If you follow what's in the § Bringing up (K8s) section, then the only two non-open-to-the-world services are `kubernetes` and `mongo-service`
+kubectl port-forward svc/<foo>-service 27017:27017 --address 0.0.0.0 >/dev/null 2>&1 & disown
+
+# Get all pods' env vars: (Works if they're crashed/errored too I think)
+kubectl set env pods --all --list
 ```
 
 ### Bringing up
@@ -53,13 +64,16 @@ sudo docker compose up [-d]
 The Docker Compose project provides 2 `mern-app-stack-*` images, which are local and thus must be built with `docker compose build` (see [§ Bringing up (Docker Compose)](#Non-scaled%20(Docker%20Compose)). **As such, you must re-`build` the Compose project** (without actually needing/having to use/run it) ***every time*** you want to relaunch the cluster—_specifically for the cases where you changed the underlying application_.<br>
 If you just changed the service(s)/deployment(s), then it doesn't really matter.
 
-```
+```sh
 # Go into /kube/: These will both override old ones, so no need to remove :)
-kubectl apply -f services/
+kubectl apply -f services/ # Need to set up services first for DNS to resolve when deployments launch
 kubectl apply -f deployments/
 
-# Pick from any of the following to open the domain `<foo>-service` to your local machine instead of cluster-internal-only:
-kubectl port-forward svc/mongo-service 27017:27017 --address 0.0.0.0 >/dev/null 2>&1 & disown
+# To emulate the Docker Compose Nginx setup, we will first need to expose the desired ports for the bare minimum access:
+kubectl port-forward svc/client-service 3000:3000 --address 0.0.0.0 >/dev/null 2>&1 & disown
+kubectl port-forward svc/me-service     8081:8081 --address 0.0.0.0 >/dev/null 2>&1 & disown
+kubectl port-forward svc/api-service    5000:5000 --address 0.0.0.0 >/dev/null 2>&1 & disown
+# (Substitute /dev/null with a text file if there are errors when trying to forward ports)
 ```
 
 ### Bringing down

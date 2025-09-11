@@ -23,5 +23,5 @@ RUN npm install -g serve
 EXPOSE 3000
 
 # Step 9: Start the server to serve the React app. Hardcoded copy of /.env because lazy
-ENV REACT_APP_YOUR_HOSTNAME="http://localhost:5000" 
+ENV REACT_APP_YOUR_HOSTNAME="http://localhost:5000"
 CMD ["serve", "-s", "build", "-l", "3000"]
