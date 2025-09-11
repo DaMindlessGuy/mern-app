@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+  labels:
+    app: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  # Define the pod here:
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api
+          image: mern-app-stack-api
+          imagePullPolicy: Never
+          env:
+            - name: PORT
+              value: "5000"
+            - name: NODE_ENV
+              value: production
+            - name: ATLAS_URI
+              value: "mongodb://root:password@mongo-service:27017/database?authSource=admin"
+          ports:
+            - containerPort: 5000
+

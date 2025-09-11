@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-deployment
+  labels:
+    app: client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client
+  # Define the pod here:
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+        - name: client
+          image: mern-app-stack-client
+          imagePullPolicy: Never
+          env:
+            - name: REACT_APP_YOUR_HOSTNAME
+              value: "http://localhost:5000" 
+          ports:
+            - containerPort: 3000
+
