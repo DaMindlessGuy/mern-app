@@ -19,10 +19,9 @@ spec:
         - name: client
           image: mern-app-stack-client
           imagePullPolicy: Never
-          # This is actually incorrect. REACT_APP_YOUR_HOSTNAME should be passed as an argument to the image's Dockerfile when building. This is post-build-time, and so importing the ConfigMap from example-env is practically redundant:
-          envFrom:
-            - configMapRef:
-                name: env
+          env:
+            - name: REACT_APP_YOUR_HOSTNAME
+              value: "http://localhost:5000" 
           ports:
             - containerPort: 3000
 
