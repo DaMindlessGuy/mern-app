@@ -3,9 +3,9 @@ name: mern-app-stack
 
 services:
   # =============== Database ===============
-  mongo:
+  mongo-service:
     image: mongo:7
-    container_name: mongo
+    container_name: mongo-service
     restart: unless-stopped
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
@@ -33,7 +33,7 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      - mongo
+      - mongo-service
     networks:
       - app-net
 
@@ -47,7 +47,7 @@ services:
     ports:
       - "5000:5000"
     depends_on:
-      - mongo
+      - mongo-service
     networks:
       - app-net
 
